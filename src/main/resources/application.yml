@@ -10,3 +10,11 @@ spring:
     hibernate:
       ddl-auto: update
     show-sql: true
+  data:
+    redis:
+      host: 220.80.40.173
+      port: 26379
+      password: redis_jesh
+logging:
+  level:
+    org.springframework.cache: trace
