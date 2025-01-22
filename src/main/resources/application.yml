@@ -1,0 +1,12 @@
+spring:
+  profiles:
+    default: local
+  datasource:
+    url: jdbc:mysql://220.80.40.173:23306/inflearnRedis?useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: sync_mysql_jesh
+    driverClassName: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
