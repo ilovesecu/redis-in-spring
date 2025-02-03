@@ -17,9 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/sned/{roomId}")
-    public ResponseEntity<Void> sendMessage(@DestinationVariable String roomId, @Payload ChatMessage message){
-        messagingTemplate.convertAndSend("/topic/room/"+roomId, message);
+    @MessageMapping("/send")
+    public ResponseEntity<Void> sendMessage(@Payload ChatMessage message){
+        // 메시지를 해당 채팅방 구독자들에게 전송
+        messagingTemplate.convertAndSend("/sub/room/"+message.getRoomId(), message);
         return ResponseEntity.ok().build();
     }
 }
