@@ -9,6 +9,6 @@ public class ChatMessage {
     private Long id;
     private String sender;
     private String content;
-    private String roomId;
+    private int roomId;
     private String type; // "CHAT", "JOIN", "LEAVE"
 }
