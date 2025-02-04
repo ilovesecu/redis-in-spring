@@ -1,5 +1,6 @@
 package com.example.redisinspring.chat.controller;
 
+import com.example.redisinspring.chat.service.ChatMessageService;
 import com.example.redisinspring.chat.service.ChatRoomService;
 import com.example.redisinspring.chat.vo.ChatMessage;
 import com.example.redisinspring.chat.vo.ChatRoom;
@@ -11,6 +12,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 import java.util.List;
 
@@ -20,6 +23,7 @@ import java.util.List;
 public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
+    private final ChatMessageService chatMessageService;
 
     @PostMapping("/room/create")
     public ResponseEntity<ChatRoom> createChatRoom(@RequestBody ChatRoom reqChatRoom){
@@ -31,14 +35,16 @@ public class ChatController {
         return ResponseEntity.ok().body(chatRoomService.getAllChatRooms());
     }
 
-    @GetMapping("/contents/{id}")
-    public ResponseEntity<List<ChatMessage>> getChatList(@PathVariable(value = "id")int id){
-        ChatMessage test = new ChatMessage();
-        test.setContent("TEST");
-        test.setId(1L);
-        test.setRoomId(id);
-        test.setSender("TESTER");
-        return ResponseEntity.ok().body(List.of(test));
+    //특정 채팅방의 메시지 조회
+    @GetMapping("/contents/{roomId}")
+    public Flux<ChatMessage> getChatList(@PathVariable(value = "roomId")long roomId){
+        return chatMessageService.getMessagesByRoomId(roomId);
+    }
+
+    //메시지 저장(테스트용)
+    @PostMapping("/save")
+    public Mono<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage){
+        return chatMessageService.saveMessage(chatMessage.getRoomId(), chatMessage.getContent(), 1L);
     }
 
     @MessageMapping("/send")
