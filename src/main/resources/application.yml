@@ -16,7 +16,7 @@ spring:
       port: 26379
       password: redis_jesh
     mongodb:
-      uri: mongodb://admin:secret@ilovepc.duckdns.org:23307/chat_db
+      uri: mongodb://admin:secret@ilovepc.duckdns.org:23307/chat_db?authSource=admin
 logging:
   level:
     org.springframework.cache: trace
