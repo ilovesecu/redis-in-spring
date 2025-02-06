@@ -44,13 +44,13 @@ public class ChatController {
     //메시지 저장(테스트용)
     @PostMapping("/save")
     public Mono<ChatMessage> saveMessage(@RequestBody ChatMessage chatMessage){
-        return chatMessageService.saveMessage(chatMessage.getRoomId(), chatMessage.getContent(), 1L);
+        return chatMessageService.saveMessage(chatMessage.getRoomId(), chatMessage.getContent(), 1L, chatMessage.getSender());
     }
 
     @MessageMapping("/send")
     public Mono<ResponseEntity<Void>> sendMessage(@Payload ChatMessage message){
         //메시지 MongoDB에 저장
-        return chatMessageService.saveMessage(message.getRoomId(), message.getContent(), message.getWriterId()).flatMap(savedMsg -> {
+        return chatMessageService.saveMessage(message.getRoomId(), message.getContent(), message.getWriterId(), message.getSender()).flatMap(savedMsg -> {
             // 메시지를 해당 채팅방 구독자들에게 전송
             messagingTemplate.convertAndSend("/sub/room/"+savedMsg.getRoomId(), savedMsg);
             return Mono.just(ResponseEntity.ok().build());

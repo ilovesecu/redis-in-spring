@@ -25,10 +25,11 @@ public class ChatMessage {
     private String type; // "CHAT", "JOIN", "LEAVE"
     private Date createdDate;
 
-    public ChatMessage(Long roomId, String content, Long writerId, Date date) {
+    public ChatMessage(Long roomId, String content, Long writerId, Date date, String sender) {
         this.roomId = roomId;
         this.content = content;
         this.writerId = writerId;
         this.createdDate = date;
+        this.sender = sender; //원래 이부분은 MySQL에서 가져와야할수도있음 아니면 redis에 캐싱하고있거나!
     }
 }

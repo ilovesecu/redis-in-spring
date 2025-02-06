@@ -17,8 +17,8 @@ public class ChatMessageService {
     private final ChatMessageRepository chatMessageRepository;
 
     //메시지 저장(비동기)
-    public Mono<ChatMessage> saveMessage(Long roomId, String content, Long writerId){
-        ChatMessage message = new ChatMessage(roomId, content, writerId, new Date());
+    public Mono<ChatMessage> saveMessage(Long roomId, String content, Long writerId, String sender){
+        ChatMessage message = new ChatMessage(roomId, content, writerId, new Date(), sender);
         return chatMessageRepository.save(message);
     }
 
