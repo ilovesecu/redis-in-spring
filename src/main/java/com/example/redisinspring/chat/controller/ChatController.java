@@ -4,6 +4,7 @@ import com.example.redisinspring.chat.service.ChatMessageService;
 import com.example.redisinspring.chat.service.ChatRoomService;
 import com.example.redisinspring.chat.vo.ChatMessage;
 import com.example.redisinspring.chat.vo.ChatRoom;
+import com.example.redisinspring.kafka.service.KafkaProducerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -24,6 +25,7 @@ public class ChatController {
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatRoomService chatRoomService;
     private final ChatMessageService chatMessageService;
+    private final KafkaProducerService kafkaProducerService;
 
     @PostMapping("/room/create")
     public ResponseEntity<ChatRoom> createChatRoom(@RequestBody ChatRoom reqChatRoom){
@@ -52,7 +54,8 @@ public class ChatController {
         //메시지 MongoDB에 저장
         return chatMessageService.saveMessage(message.getRoomId(), message.getContent(), message.getWriterId(), message.getSender()).flatMap(savedMsg -> {
             // 메시지를 해당 채팅방 구독자들에게 전송
-            messagingTemplate.convertAndSend("/sub/room/"+savedMsg.getRoomId(), savedMsg);
+            //messagingTemplate.convertAndSend("/sub/room/"+savedMsg.getRoomId(), savedMsg);
+            kafkaProducerService.send(savedMsg);
             return Mono.just(ResponseEntity.ok().build());
         });
     }

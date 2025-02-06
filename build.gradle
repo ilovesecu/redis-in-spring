@@ -34,6 +34,8 @@ dependencies {
 	//mongoDB
 	implementation 'org.springframework.boot:spring-boot-starter-webflux'  // WebFlux 추가
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive' // Reactive MongoDB 추가
+	//kafka
+	implementation 'org.springframework.kafka:spring-kafka'
 
 }
 
